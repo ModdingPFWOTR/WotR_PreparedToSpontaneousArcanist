@@ -1,5 +1,6 @@
 using HarmonyLib;
 using UnityModManagerNet;
+using allSpontaneous.UI;
 
 namespace allSpontaneous
 {
@@ -7,43 +8,61 @@ namespace allSpontaneous
     {
         public static UnityModManager.ModEntry ModEntry;
         public static Harmony HarmonyInstance;
+        public static Settings Settings;
+        public static bool Enabled = true;
 
         public static bool Load(UnityModManager.ModEntry modEntry)
         {
             ModEntry = modEntry;
+            Settings = Settings.Load();
             HarmonyInstance = new Harmony(modEntry.Info.Id);
 
             modEntry.OnToggle = OnToggle;
             modEntry.OnGUI = OnGUI;
             modEntry.OnSaveGUI = OnSaveGUI;
 
-            ModEntry.Logger.Log("allSpontaneous loaded.");
+            try
+            {
+                HarmonyInstance.PatchAll();
+                Log("allSpontaneousArcanistStyle loaded.");
+            }
+            catch (System.Exception ex)
+            {
+                Log($"Harmony patch failed: {ex}");
+                return false;
+            }
+
             return true;
+        }
+
+        public static void Log(string message)
+        {
+            ModEntry?.Logger.Log(message);
         }
 
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value)
         {
+            Enabled = value;
             if (value)
             {
-                HarmonyInstance.PatchAll();
-                ModEntry.Logger.Log("Mod enabled.");
+                Log("Mod enabled.");
             }
             else
             {
-                HarmonyInstance.UnpatchAll(HarmonyInstance.Id);
-                ModEntry.Logger.Log("Mod disabled.");
+                Log("Mod disabled. Blueprint changes already applied this session stay until you revert them in the menu or restart the game.");
             }
+
             return true;
         }
 
         private static void OnGUI(UnityModManager.ModEntry modEntry)
         {
-            // TODO: Interface de configuração por classe
+            UmmMenu.Draw(modEntry);
         }
 
         private static void OnSaveGUI(UnityModManager.ModEntry modEntry)
         {
-            // TODO: Salvar configurações
+            Settings?.Save();
         }
     }
 }

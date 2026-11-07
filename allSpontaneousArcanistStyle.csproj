@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
-    <AssemblyName>allSpontaneous</AssemblyName>
+    <AssemblyName>allSpontaneousArcanistStyle</AssemblyName>
     <RootNamespace>allSpontaneous</RootNamespace>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>
