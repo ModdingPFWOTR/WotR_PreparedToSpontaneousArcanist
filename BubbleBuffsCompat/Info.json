@@ -1,0 +1,14 @@
+{
+  "Id": "allSpontaneousBubbleBuffsCompat",
+  "DisplayName": "allSpontaneous BubbleBuffs Compat",
+  "Author": "Picninim piq",
+  "Version": "1.0.0",
+  "ManagerVersion": "0.23.0",
+  "GameVersion": "2.7.0",
+  "Requirements": ["BubbleBuffs", "allSpontaneousArcanistStyle"],
+  "LoadAfter": ["BubbleBuffs", "allSpontaneousArcanistStyle"],
+  "AssemblyName": "allSpontaneousBubbleBuffsCompat.dll",
+  "EntryMethod": "allSpontaneous.Compat.Main.Load",
+  "HomePage": "",
+  "Repository": ""
+}
