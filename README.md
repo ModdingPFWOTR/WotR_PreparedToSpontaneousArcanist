@@ -1,34 +1,50 @@
 # allSpontaneousArcanistStyle
 
-Mod de Unity Mod Manager para Pathfinder: Wrath of the Righteous.
+A [Unity Mod Manager](https://www.nexusmods.com/site/mods/21) mod for *Pathfinder: Wrath of the Righteous*.
 
-Converte spellbooks **prepared** para o estilo **Arcanist**: a classe continua com spellbook (e aprende por scroll, se já podia), prepara uma lista e gasta um pool spontaneous. O menu lista as classes/arquétipos descobertos em runtime; cada um pode ser ligado ou desligado. A configuração fica em `settings.json` na pasta do mod.
+Prepared casters stay prepared. They still learn spells the way their class already does (a wizard still learns on level-up and from scrolls; a cleric still knows the full list) and they still fill spell slots after a rest. What changes is how those prepared spells are spent: every prepared spell of a given level draws from one shared cast pool for that level, the same way an Arcanist does.
 
-## Instalação
+The class does not become an Arcanist. It keeps its own spells-per-day table, its own casting ability (a wizard's Intelligence, a cleric's Wisdom, a paladin's Charisma), and extras such as Abundant Casting. Those bonuses raise the shared pool. The number of *different* spells you can prepare still follows the class table without the ability bonus and without Abundant Casting. Real Arcanist spellbooks are left alone. The change applies to the player and companions; enemies keep the original spellbook.
 
-1. Instale o [Unity Mod Manager](https://www.nexusmods.com/site/mods/21) e aplique no Wrath of the Righteous.
-2. Copie a pasta `allSpontaneousArcanistStyle` para `<jogo>\Mods\`.
-3. A pasta final deve conter `allSpontaneousArcanistStyle.dll` e `Info.json`.
-4. Abra o jogo, confirme que o mod aparece no UMM e está habilitado.
-5. No menu do UMM, marque as classes (ou use “Convert every prepared spellbook”).
+Each discovered class and archetype can be turned on or off from the mod menu. Choices are stored in `settings.json` in the mod folder.
 
-Caminho típico Steam:
+## Install
+
+1. Install Unity Mod Manager and apply it to Wrath of the Righteous.
+2. Copy the `allSpontaneousArcanistStyle` folder into `<game>\Mods\`.
+3. That folder needs `allSpontaneousArcanistStyle.dll` and `Info.json`.
+4. Start the game and confirm the mod is listed and enabled in UMM.
+5. In the UMM menu, tick the classes you want, or enable "Convert every prepared spellbook as it is discovered".
+
+A typical Steam path:
 
 `D:\SteamLibrary\steamapps\common\Pathfinder Second Adventure\Mods\allSpontaneousArcanistStyle`
 
-## Uso
+On a character that already exists, rest once after turning a spellbook on so the slots refresh.
 
-- **Toggle por spellbook:** a classe continua com o livro dela (mago aprende no level-up e por scroll; clérigo continua conhecendo a lista). Você prepara magias em slots. As magias preparadas de um círculo gastam um pool compartilhado, como o Arcanista.
-- **Quantidade:** o pool é o cálculo normal da classe. A tabela dela, mais o atributo de conjuração dela (Inteligência do mago, Sabedoria do clérigo, Carisma do paladino) e extras como Abundant Casting. Não troca para a tabela nem para o atributo de Arcanista ou Feiticeiro.
-- **Slots preparados:** a quantidade de magias diferentes que cabem no dia segue a tabela da classe, sem o bônus de atributo e sem Abundant Casting. Esses bônus aumentam o pool de conjurações.
-- **Arcanist** de verdade não é convertido.
-- **Rescan:** se a lista estiver vazia, entre no menu principal ou num save e clique em rescan — os blueprints são carregados sob demanda.
-- Reinicie o jogo se mudar muita coisa com um personagem já criado.
+## Usage
 
-## Build (desenvolvimento)
+- **Per spellbook.** Toggle a class in the list. Prepared spells of one circle share that circle's casts. Cantrips are unchanged.
+- **Pool size.** The class table, plus that class's own ability modifier and extras such as Abundant Casting.
+- **Prepared slots.** How many different spells fit in the day follows the class table, without the ability bonus and without Abundant Casting. Those bonuses increase casts, not the number of preparations.
+- **Native Arcanists** are skipped.
+- **Scan.** Blueprints load on demand. If the list is empty, open the main menu or a save, then click "Scan spellbooks".
+- Restart the game after large changes on a character that is already created. Turning the mod off in UMM does not undo blueprint changes already applied this session; uncheck the class in the menu, or restart.
+
+## BubbleBuffs
+
+`BubbleBuffsCompat` is a separate mod for players who also use [BubbleBuffs](https://www.nexusmods.com/pathfinderwrathoftherighteous/mods/62). BubbleBuffs counts a prepared spell once per memorized copy unless the book is spontaneous or an Arcanist. This mod keeps those blueprint flags off so enemies stay on the original book, and the compat mod tells BubbleBuffs to use the shared pool instead. It loads after both BubbleBuffs and this mod. Reopen the spellbook after enabling or disabling it.
+
+## Build
+
+Requires the .NET SDK and a local install of the game (Unity Mod Manager already applied). `Directory.Build.props` points at the Steam folder; override `GamePath` there if yours is different.
 
 ```powershell
 dotnet build
 ```
 
-O DLL e o `Info.json` são copiados para a pasta Mods do jogo.
+The build copies the DLL and `Info.json` into the game's `Mods` folder. `BubbleBuffsCompat` is a second project in the same solution.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
